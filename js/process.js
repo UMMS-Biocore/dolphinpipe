@@ -1,3 +1,66 @@
+function getInputTable(id) {
+    inputTable = $('#pinputtable').DataTable({
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "scrollX": true,
+            "destroy": true,
+            "ajax": {
+                url: "ajax/ajaxquery.php",
+                data: {process_id: id,
+                    type: 'input',
+                    p: "getAllProcessParameters"},
+                dataSrc: ""
+            },
+            "columns": [{
+                    "data": "id"
+                }, {
+                    "data": "name"
+                }, {
+                    "data": "process_name"
+                }, {
+                    "data": "version"
+                }, {
+                    "data": "type"
+                }, {
+                    data: null,
+                    className: "center",
+                    defaultContent: getTableButtons('input', REMOVE)
+                }]
+        });
+      return inputTable;
+
+}
+function getOutputTable(id) {
+     outputTable = $('#poutputtable').DataTable({
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "scrollX": true,
+            "destroy": true,
+            "ajax": {
+                url: "ajax/ajaxquery.php",
+                data: {process_id: id,
+                       type: 'output',
+                       p: "getAllProcessParameters"},
+                "dataSrc": ""
+            },
+            "columns": [{
+                    "data": "id"
+                }, {
+                    "data": "name"
+                }, {
+                    "data": "process_name"
+                }, {
+                    "data": "version"
+                }, {
+                    "data": "type"
+                }, {
+                    data: null,
+                    className: "center",
+                    defaultContent: getTableButtons('output', REMOVE)
+            }]
+        });
+return outputTable
+}
 $(document).ready(function () {
     var inputTable = null;
     var outputTable = null;
@@ -25,7 +88,8 @@ $(document).ready(function () {
                 defaultContent: getTableButtons("process", SELECT | EDIT | REMOVE)
             }]
     });
-
+    
+    
     $('#processtable').on('click', '#processselect', function () {
         var clickedRow = $(this).closest('tr');
 
@@ -37,67 +101,13 @@ $(document).ready(function () {
             clickedRow.addClass('selected');
 
             var rowData = processTable.row(clickedRow).data();
+            console.log(rowData)
             $('#pdetailpanelHead').html(rowData['name']);
             $('#pScriptWell').html(rowData['script']);
             selProcessID = rowData['id'];
 
-            inputTable = $('#pinputtable').DataTable({
-                "scrollY": "400px",
-                "scrollCollapse": true,
-                "scrollX": true,
-                "destroy": true,
-                "ajax": {
-                    url: "ajax/ajaxquery.php",
-                    data: {process_id: selProcessID,
-                        type: 'input',
-                        p: "getAllProcessParameters"},
-                    dataSrc: ""
-                },
-                "columns": [{
-                        "data": "id"
-                    }, {
-                        "data": "name"
-                    }, {
-                        "data": "process_id"
-                    }, {
-                        "data": "parameter_id"
-                    }, {
-                        "data": "type"
-                    }, {
-                        data: null,
-                        className: "center",
-                        defaultContent: getTableButtons('input', REMOVE)
-                    }]
-            });
-
-            outputTable = $('#poutputtable').DataTable({
-                "scrollY": "400px",
-                "scrollCollapse": true,
-                "scrollX": true,
-                "destroy": true,
-                "ajax": {
-                    url: "ajax/ajaxquery.php",
-                    data: {process_id: selProcessID,
-                           type: 'output',
-                           p: "getAllProcessParameters"},
-                    "dataSrc": ""
-                },
-                "columns": [{
-                        "data": "id"
-                    }, {
-                        "data": "name"
-                    }, {
-                        "data": "process_id"
-                    }, {
-                        "data": "parameter_id"
-                    }, {
-                        "data": "type"
-                    }, {
-                        data: null,
-                        className: "center",
-                        defaultContent: getTableButtons('output', REMOVE)
-                }]
-            });
+            inputTable = getInputTable(selProcessID)
+            outputTable = getOutputTable(selProcessID)
 
 
             $("#pdetailpanel").removeAttr("style");

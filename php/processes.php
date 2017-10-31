@@ -75,8 +75,8 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Process ID</th>
-                                        <th>Parameter ID</th>
+                                        <th>Process Name</th>
+                                        <th>Version</th>
                                         <th>Type</th>
                                         <th>Delete</th>
                                     </tr>

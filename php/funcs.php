@@ -1,4 +1,7 @@
 <?php
+
+
+
 function getTitle($np)
 {
   $ret="";
@@ -17,7 +20,7 @@ function getPage($np)
   else if ($np==3){include("php/pipelines.php");}
   else if ($np==4){include("php/newparams.php");}
   else if ($np==5){include("php/pipeline3.php");}
-  else {include("php/main.php");}
+  else {include("php/pipeline3.php");}
 }
 
 function getJS($np)
@@ -38,5 +41,6 @@ function getJS($np)
   }
   return $js;
 }
+
 
 ?>

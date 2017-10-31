@@ -137,8 +137,8 @@ class dbfuncs {
             $typeExp = "AND type = '$type'";
         }
 
-        $sql = "SELECT id, name, process_id, parameter_id, type FROM process_parameter 
-                WHERE process_id = $process_id $typeExp";
+        $sql = "SELECT pp.id, pp.name, p.name process_name, p.version, type FROM process p, process_parameter pp 
+                WHERE pp.process_id = $process_id $typeExp AND pp.process_id = p.id";
         return self::queryTable($sql);
     }
  
@@ -389,7 +389,7 @@ class dbfuncs {
 		if ($id != ""){
 			$where = " where id = $id";
 		}
-		$sql = "SELECT id, name, version, script FROM process $where";
+		$sql = "SELECT id, name, version, summary, script FROM process $where";
 		return self::queryTable($sql);
 	}
 	
@@ -410,14 +410,20 @@ class dbfuncs {
 	public function saveAllPipeline($dat) {
 		$obj = json_decode($dat);
 		$user = "docker";
-		$edges = "{\'edges\':".json_encode($obj[3]->{"edges"})."}";
-		$mainG = "{\'mainG\':".json_encode($obj[2]->{"mainG"})."}";
-		$nodes = json_encode($obj[1]->{"nodes"});
+		$id = $obj[1]->{"id"};
+		$edges = "{\'edges\':".json_encode($obj[4]->{"edges"})."}";
+		$mainG = "{\'mainG\':".json_encode($obj[3]->{"mainG"})."}";
+		$nodes = json_encode($obj[2]->{"nodes"});
 		$name =  $obj[0]->{"name"};
 	
+	    if ($id > 0){
+			$sql = "UPDATE biocorepipe_save set edges = '".$edges."',
+			    mainG = '".$mainG."', nodes ='".$nodes."' where id = $id";
+		}else{
 		$sql = "INSERT INTO biocorepipe_save(user, edges, mainG, nodes, name)
 				VALUES ('".$user."', '".$edges."', '".$mainG."', '".$nodes."', '".$name."')";
-		return self::insTable($sql);
+		}
+  		return self::insTable($sql);
 	}
 	public function getSavedPipelines() {
 		$sql = "select id, name from biocorepipe_save";
